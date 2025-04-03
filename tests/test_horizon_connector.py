@@ -40,8 +40,8 @@ def test_get_pentests_with_filters():
     params = {
         "page_size": 10,
         "state": "done",
-        "order_by": "launched_at",
-        "sort_order": "DESC"
+        "order_by": "Launch Date",
+        "sort_order": "Descending"
     }
     resp = get_pentests(config, params)
     pentests = resp['pentests_page'].get('pentests', [])

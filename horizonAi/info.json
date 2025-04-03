@@ -83,53 +83,53 @@
           "tooltip": "Search across all text columns"
         },
         {
-          "title": "Order By Field",
+          "title": "Sort By",
           "type": "select",
           "name": "order_by",
           "required": false,
           "visible": true,
           "editable": true,
           "options": [
-            "name",
-            "state",
-            "client_name",
-            "launched_at",
-            "completed_at",
-            "impacts_count",
-            "attack_paths_count"
+            "Operation Name",
+            "Status",
+            "Client",
+            "Launch Date",
+            "Completion Date",
+            "Impact Count",
+            "Attack Path Count"
           ],
-          "description": "Field to order results by",
-          "tooltip": "Field to order results by"
+          "description": "Field to sort results by",
+          "tooltip": "Choose which field to sort the results by"
         },
         {
-          "title": "Sort Order",
+          "title": "Sort Direction",
           "type": "select",
           "name": "sort_order",
           "required": false,
           "visible": true,
           "editable": true,
           "options": [
-            "ASC",
-            "DESC"
+            "Ascending",
+            "Descending"
           ],
-          "description": "Sort order direction",
-          "tooltip": "Sort order direction"
+          "description": "Direction to sort results",
+          "tooltip": "Sort results in ascending or descending order"
         },
         {
-          "title": "Date Field",
+          "title": "Date Filter Field",
           "type": "select",
           "name": "date_field",
           "required": false,
           "visible": true,
           "editable": true,
           "options": [
-            "launched_at",
-            "completed_at",
-            "scheduled_at",
-            "canceled_at"
+            "Launch Date",
+            "Completion Date",
+            "Schedule Date",
+            "Cancellation Date"
           ],
-          "description": "Field to apply date filters to",
-          "tooltip": "Field to apply date filters to"
+          "description": "Which date field to filter by",
+          "tooltip": "Select which date field to apply the date range filters to"
         },
         {
           "title": "Date From",
@@ -152,27 +152,27 @@
           "tooltip": "Filter results until this date"
         },
         {
-          "title": "State",
+          "title": "Operation Status",
           "type": "select",
           "name": "state",
           "required": false,
           "visible": true,
           "editable": true,
           "options": [
-            "scheduled",
-            "provisioning",
-            "ready",
-            "running",
-            "complete",
-            "post-processing",
-            "done",
-            "cancelling",
-            "canceled",
-            "paused",
-            "error"
+            "Scheduled",
+            "Provisioning",
+            "Ready",
+            "Running",
+            "Complete",
+            "Post-Processing",
+            "Done",
+            "Cancelling",
+            "Canceled",
+            "Paused",
+            "Error"
           ],
-          "description": "Filter by pentest state",
-          "tooltip": "Filter by pentest state"
+          "description": "Filter by operation status",
+          "tooltip": "Show only operations in the selected status"
         },
         {
           "title": "Client Name",
