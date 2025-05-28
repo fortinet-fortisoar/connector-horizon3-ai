@@ -2,103 +2,751 @@
   "type": "workflow_collections",
   "data": [
     {
-      "uuid": "ab95a52c-16f5-4f17-b82a-337f174c50d7",
+      "@context": "/api/3/contexts/WorkflowCollection",
       "@type": "WorkflowCollection",
-      "name": "Sample - HorizonAi - 1.0.0",
-      "description": "",
+      "name": "Sample - Horizon3.ai - 1.0.0",
+      "description": "Sample playbooks for \"Horizon3.ai\" connector. If you are planning to use any of the sample playbooks in your environment, ensure that you clone those playbooks and move them to a different collection, since the sample playbook collection gets deleted during connector upgrade and delete.",
       "visible": true,
-      "image": null,
+      "image": "/api/3/images/26297031-94c8-4507-9bcb-5422014f8d00",
+      "id": 74,
+      "createDate": 1745843108.041935,
+      "modifyDate": 1745843108.041935,
+      "deletedAt": null,
+      "importedBy": [],
       "recordTags": [
         "horizonAi"
       ],
       "workflows": [
         {
           "@type": "Workflow",
-          "uuid": "28f985c2-eb85-4083-9c60-0ba918881bde",
-          "collection": "/api/3/workflow_collections/ab95a52c-16f5-4f17-b82a-337f174c50d7",
           "triggerLimit": null,
-          "description": "Retrieve and filter pentest operations",
-          "name": "Get Pentests",
-          "tag": "#HorizonAi",
-          "recordTags": [
-            "horizonAi"
-          ],
+          "name": ">> HorizonAI >> Create Vulnerability",
+          "aliasName": null,
+          "tag": null,
+          "description": "This Playbook creates vulnerabilities in FortiSOAR.",
           "isActive": false,
           "debug": false,
           "singleRecordExecution": false,
-          "parameters": [],
+          "remoteExecutableFlag": false,
+          "parameters": [
+            "vulnerabilityData",
+            "ScanRecordIri"
+          ],
           "synchronous": false,
-          "triggerStep": "/api/3/workflow_steps/5b11750b-91e6-46da-9be9-c051a95da581",
+          "lastModifyDate": 1745844401,
+          "collection": "/api/3/workflow_collections/ab95a52c-16f5-4f17-b82a-337f174c50d7",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/419f8ec7-2a01-47cf-9262-2d6199dcece3",
           "steps": [
             {
-              "uuid": "5b11750b-91e6-46da-9be9-c051a95da581",
+              "@type": "WorkflowStep",
+              "name": "Create Vulnerabilities",
+              "description": null,
+              "arguments": {
+                "for_each": {
+                  "item": "{{vars.steps.Get_Weaknesses.data['weaknesses_page'].weaknesses}}",
+                  "__bulk": true,
+                  "parallel": false,
+                  "condition": "",
+                  "batch_size": 100
+                },
+                "resource": {
+                  "name": "{{vars.item[\"vuln_name\"]}}",
+                  "__replace": "true",
+                  "incidents": "{{vars.input.params.incidentRecordIri}}",
+                  "riskScore": "{{vars.item.score}}",
+                  "sourceData": "{{vars.item | toJSON}}",
+                  "vulnerabilityId": "{{vars.item.vuln_id}}"
+                },
+                "operation": "Overwrite",
+                "collection": "/api/3/upsert/vulnerabilities",
+                "__recommend": [],
+                "fieldOperation": {
+                  "recordTags": "Overwrite"
+                },
+                "step_variables": []
+              },
+              "status": null,
+              "top": "300",
+              "left": "120",
+              "stepType": "/api/3/workflow_step_types/2597053c-e718-44b4-8394-4d40fe26d357",
+              "group": null,
+              "uuid": "85d5c669-165e-4646-ab21-40993e92eec0"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Weaknesses",
+              "description": null,
+              "arguments": {
+                "name": "Horizon3.ai",
+                "config": "fe592f75-48d3-485c-a0f9-84d940adb125",
+                "params": {
+                  "op_id": "{{vars.input.params.vulnerabilityData}}",
+                  "page_num": "",
+                  "page_size": ""
+                },
+                "version": "1.0.0",
+                "connector": "horizonAi",
+                "operation": "get_weaknesses",
+                "operationTitle": "Get Weaknesses",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "160",
+              "left": "120",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "769f61e2-2ca0-4934-9992-c3fba3607e9d"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  }
+                }
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "419f8ec7-2a01-47cf-9262-2d6199dcece3"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Weaknesses -> Create Alerts",
+              "targetStep": "/api/3/workflow_steps/85d5c669-165e-4646-ab21-40993e92eec0",
+              "sourceStep": "/api/3/workflow_steps/769f61e2-2ca0-4934-9992-c3fba3607e9d",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "10f0418a-b75e-4932-bcb1-19265076753c"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Get Weaknesses",
+              "targetStep": "/api/3/workflow_steps/769f61e2-2ca0-4934-9992-c3fba3607e9d",
+              "sourceStep": "/api/3/workflow_steps/419f8ec7-2a01-47cf-9262-2d6199dcece3",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "b221a0c3-779a-49c3-a1b1-b9dee77a4838"
+            }
+          ],
+          "groups": [],
+          "priority": "/api/3/picklists/2b563c61-ae2c-41c0-a85a-c9709585e3f2",
+          "uuid": "2dbbc731-04d9-4315-949b-588e7f719524",
+          "id": 1037,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "create",
+            "dataingestion",
+            "horizonAi"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "> HorizonAI > Fetch and Create",
+          "aliasName": null,
+          "tag": "#HorizonAI #dataingestion #fetch #create",
+          "description": "This playbook fetches and creates pentests from Horizon3.ai",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1745844150,
+          "collection": "/api/3/workflow_collections/ab95a52c-16f5-4f17-b82a-337f174c50d7",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/541e6bf4-4ed3-47cc-a63a-c40b05bd9c45",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Capture Current Time",
+              "description": null,
+              "arguments": {
+                "current_timestamp": "{{arrow.utcnow().format('YYYY-MM-DDTHH:mm:ss.ssss')+\"Z\"}}"
+              },
+              "status": null,
+              "top": "600",
+              "left": "620",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "1b66f191-85b0-4e36-b697-237c09927d4f"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Configuration",
+              "description": null,
+              "arguments": {
+                "state": "",
+                "text_search": "",
+                "pullTimeMacro": "HorizonAILastPullTime_{{vars['audit_info']['cyops_playbook_iri'].split('/')[-1].replace('-','_')}}",
+                "fetch_pentests_in_last_X_minutes": ""
+              },
+              "status": null,
+              "top": "120",
+              "left": "300",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "d8ec215f-7251-40a9-8b67-7113a2f81feb"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Create Record",
+              "description": null,
+              "arguments": {
+                "for_each": {
+                  "item": "{{vars.steps.Get_Pentests.data.pentests_page.pentests}}",
+                  "__bulk": true,
+                  "parallel": false,
+                  "condition": "",
+                  "batch_size": 100
+                },
+                "resource": {
+                  "name": "{{vars.item.name}}",
+                  "state": "{{vars.item.state}}",
+                  "scanId": "{{vars.item.op_id}}",
+                  "source": "Horizon3.ai",
+                  "userId": "{{vars.item.user_name}}",
+                  "duration": "{{vars.item.duration_s}}",
+                  "__replace": "true",
+                  "scanReferenceID": "{{vars.item.op_id}}",
+                  "isIngestionCompleted": "/api/3/picklists/711303d3-75ea-437d-a871-0a8d14fcdb7d"
+                },
+                "operation": "Overwrite",
+                "collection": "/api/3/upsert/scans",
+                "__recommend": [],
+                "fieldOperation": {
+                  "recordTags": "Overwrite"
+                },
+                "step_variables": []
+              },
+              "status": null,
+              "top": "600",
+              "left": "1240",
+              "stepType": "/api/3/workflow_step_types/2597053c-e718-44b4-8394-4d40fe26d357",
+              "group": null,
+              "uuid": "7e375747-7582-4897-b98a-3aedff6a57fa"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Create Vulnerability",
+              "description": null,
+              "arguments": {
+                "for_each": {
+                  "item": "{{vars.steps.Create_Record}}",
+                  "__bulk": false,
+                  "parallel": false,
+                  "condition": ""
+                },
+                "arguments": {
+                  "ScanRecordIri": "{{vars.item['@id']}}",
+                  "vulnerabilityData": "{{vars.item.scanId}}"
+                },
+                "apply_async": false,
+                "step_variables": [],
+                "pass_parent_env": false,
+                "pass_input_record": false,
+                "workflowReference": "/api/3/workflows/2dbbc731-04d9-4315-949b-588e7f719524"
+              },
+              "status": null,
+              "top": "600",
+              "left": "1580",
+              "stepType": "/api/3/workflow_step_types/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+              "group": null,
+              "uuid": "5bf26739-bef2-4e9c-8694-37e677b42541"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Extract Value From Response",
+              "description": null,
+              "arguments": {
+                "last_pull_time": "{% if (vars.steps.Get_Macro_Value.data[\"hydra:member\"] | length) > 0%}{{vars.steps.Get_Macro_Value.data[\"hydra:member\"][0].value }}{% else %}{{vars.fetch_pentests_in_last_X_minutes}}{% endif %}"
+              },
+              "status": null,
+              "top": "360",
+              "left": "300",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "0776f9a4-d119-420d-b49a-68b38a7c85fb"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Data for Mapping",
+              "description": null,
+              "arguments": {
+                "name": "Horizon3.ai",
+                "config": "fe592f75-48d3-485c-a0f9-84d940adb125",
+                "params": {
+                  "date_to": "",
+                  "page_num": "",
+                  "date_from": "{{vars.fetch_pentests_in_last_X_minutes}}",
+                  "page_size": 3,
+                  "client_name": "",
+                  "text_search": "",
+                  "include_weaknesses": false,
+                  "include_attack_paths": false
+                },
+                "version": "1.0.0",
+                "connector": "horizonAi",
+                "operation": "get_pentests",
+                "operationTitle": "Get Pentests",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "360",
+              "left": "640",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "b2d1b891-f271-4793-8673-33a1a8e7e6e6"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Macro Value",
+              "description": null,
+              "arguments": {
+                "params": {
+                  "iri": "/api/wf/api/dynamic-variable/?name={{vars.pullTimeMacro}}",
+                  "body": "",
+                  "method": "GET"
+                },
+                "version": "3.2.3",
+                "connector": "cyops_utilities",
+                "operation": "make_cyops_request",
+                "operationTitle": "FSR: Make FortiSOAR API Call",
+                "step_variables": []
+              },
+              "status": null,
+              "top": "240",
+              "left": "300",
+              "stepType": "/api/3/workflow_step_types/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+              "group": null,
+              "uuid": "ed4a0031-d2e0-4dbe-b0e1-4077a2bb7018"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Get Pentests",
+              "description": null,
+              "arguments": {
+                "name": "Horizon3.ai",
+                "config": "fe592f75-48d3-485c-a0f9-84d940adb125",
+                "params": {
+                  "state": "{{vars.state}}",
+                  "date_to": "{{vars.current_timestamp}}",
+                  "page_num": "",
+                  "date_from": "{{vars.last_pull_time}}",
+                  "page_size": "",
+                  "client_name": "",
+                  "text_search": "{{vars.text_search}}",
+                  "include_weaknesses": true,
+                  "include_attack_paths": true
+                },
+                "version": "1.0.0",
+                "connector": "horizonAi",
+                "operation": "get_pentests",
+                "operationTitle": "Get Pentests",
+                "pickFromTenant": false,
+                "step_variables": []
+              },
+              "status": null,
+              "top": "600",
+              "left": "920",
+              "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671",
+              "group": null,
+              "uuid": "d65b8c84-ec87-496a-b9ca-d692c5e1de1a"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Is Data Only For mapping",
+              "description": null,
+              "arguments": {
+                "conditions": [
+                  {
+                    "option": "Yes, For Mapping",
+                    "step_iri": "/api/3/workflow_steps/b2d1b891-f271-4793-8673-33a1a8e7e6e6",
+                    "condition": "{{ vars.request.env_setup == true }}",
+                    "step_name": "Get Data for Mapping"
+                  },
+                  {
+                    "option": "No, For Ingestion",
+                    "default": true,
+                    "step_iri": "/api/3/workflow_steps/1b66f191-85b0-4e36-b697-237c09927d4f",
+                    "step_name": "Capture Current Time"
+                  }
+                ],
+                "step_variables": []
+              },
+              "status": null,
+              "top": "480",
+              "left": "300",
+              "stepType": "/api/3/workflow_step_types/12254cf5-5db7-4b1a-8cb1-3af081924b28",
+              "group": null,
+              "uuid": "8ecd424f-dc48-4d3b-b1a6-e56c0e24bf50"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Mapping Data",
+              "description": null,
+              "arguments": {
+                "data": "{{vars.steps.Get_Data_for_Mapping.data['pentests_page'].pentests}}"
+              },
+              "status": null,
+              "top": "360",
+              "left": "1000",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "67c1948f-5b19-4d72-8cee-83dbf862dcd5"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Set Result",
+              "description": null,
+              "arguments": {
+                "macro_name": "{{vars.pullTimeMacro}}",
+                "updated_last_pull_time": "{{vars.current_timestamp}}"
+              },
+              "status": null,
+              "top": "600",
+              "left": "1920",
+              "stepType": "/api/3/workflow_step_types/04d0cf46-b6a8-42c4-8683-60a7eaa69e8f",
+              "group": null,
+              "uuid": "c6a523ed-0b1e-463d-a24b-8541c7054b9f"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "__triggerLimit": true,
+                "step_variables": {
+                  "input": {
+                    "params": []
+                  },
+                  "_configuration_schema": "[\n  {\n    \"title\": \"Fetch Pentests Since\",\n    \"required\": true,\n    \"editable\": true,\n    \"visible\": true,\n    \"type\": \"datetime\",\n    \"name\": \"fetch_pentests_in_last_X_minutes\",\n    \"tooltip\": \"Select a date and time to retrieve incidents created or updated after the specified time.\"\n  },\n  {\n    \"title\": \"Text Search\",\n    \"type\": \"text\",\n    \"name\": \"text_search\",\n    \"required\": false,\n    \"visible\": true,\n    \"editable\": true,\n    \"description\": \"Specify text to search across all text columns.\",\n    \"tooltip\": \"Specify text to search across all text columns.\"\n  },\n  {\n    \"title\": \"Operation Status\",\n    \"type\": \"select\",\n    \"name\": \"state\",\n    \"required\": false,\n    \"visible\": true,\n    \"editable\": true,\n    \"options\": [\n      \"Scheduled\",\n      \"Provisioning\",\n      \"Ready\",\n      \"Running\",\n      \"Complete\",\n      \"Post-Processing\",\n      \"Done\",\n      \"Cancelling\",\n      \"Canceled\",\n      \"Paused\",\n      \"Error\"\n    ],\n    \"description\": \"Filters the result by operation status.\",\n    \"tooltip\": \"Filters the result by operation status.\"\n  }\n]"
+                },
+                "triggerOnSource": true,
+                "triggerOnReplicate": false
+              },
+              "status": null,
+              "top": "20",
+              "left": "300",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "541e6bf4-4ed3-47cc-a63a-c40b05bd9c45"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Capture Current Time -> Copy of Get Data for Mapping",
+              "targetStep": "/api/3/workflow_steps/d65b8c84-ec87-496a-b9ca-d692c5e1de1a",
+              "sourceStep": "/api/3/workflow_steps/1b66f191-85b0-4e36-b697-237c09927d4f",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "febc1c31-dcea-481a-b5be-685f40370c46"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Configuration -> Get Macro Value",
+              "targetStep": "/api/3/workflow_steps/ed4a0031-d2e0-4dbe-b0e1-4077a2bb7018",
+              "sourceStep": "/api/3/workflow_steps/d8ec215f-7251-40a9-8b67-7113a2f81feb",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "27574e8d-9585-4501-b6c6-25f76097bd46"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Copy of Get Data for Mapping -> Create Record",
+              "targetStep": "/api/3/workflow_steps/7e375747-7582-4897-b98a-3aedff6a57fa",
+              "sourceStep": "/api/3/workflow_steps/d65b8c84-ec87-496a-b9ca-d692c5e1de1a",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "7494028b-28ff-4659-904e-f8fafad7b65e"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Create Alert -> Set Result",
+              "targetStep": "/api/3/workflow_steps/c6a523ed-0b1e-463d-a24b-8541c7054b9f",
+              "sourceStep": "/api/3/workflow_steps/5bf26739-bef2-4e9c-8694-37e677b42541",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "d58c03cf-01a3-4611-b719-54628d9508b4"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Create Record -> Create Alert",
+              "targetStep": "/api/3/workflow_steps/5bf26739-bef2-4e9c-8694-37e677b42541",
+              "sourceStep": "/api/3/workflow_steps/7e375747-7582-4897-b98a-3aedff6a57fa",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f2c7112f-9c6f-4255-a046-204a35c07105"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Extract Value From Response -> Is Data Only For mapping",
+              "targetStep": "/api/3/workflow_steps/8ecd424f-dc48-4d3b-b1a6-e56c0e24bf50",
+              "sourceStep": "/api/3/workflow_steps/0776f9a4-d119-420d-b49a-68b38a7c85fb",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f05327b7-4284-4e93-90db-c0ac31be5926"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Data for Mapping -> Mapping Data",
+              "targetStep": "/api/3/workflow_steps/67c1948f-5b19-4d72-8cee-83dbf862dcd5",
+              "sourceStep": "/api/3/workflow_steps/b2d1b891-f271-4793-8673-33a1a8e7e6e6",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "602e4cba-adf6-4fcb-b8a7-d9cd4ba22c23"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Get Macro Value -> Extract Value From Response",
+              "targetStep": "/api/3/workflow_steps/0776f9a4-d119-420d-b49a-68b38a7c85fb",
+              "sourceStep": "/api/3/workflow_steps/ed4a0031-d2e0-4dbe-b0e1-4077a2bb7018",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "c4c1a60c-60fd-4d9f-a2e7-9a422cb7274b"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Is Data Only For mapping -> Capture Current Time",
+              "targetStep": "/api/3/workflow_steps/1b66f191-85b0-4e36-b697-237c09927d4f",
+              "sourceStep": "/api/3/workflow_steps/8ecd424f-dc48-4d3b-b1a6-e56c0e24bf50",
+              "label": "No, For Ingestion",
+              "isExecuted": false,
+              "group": null,
+              "uuid": "bde3b7d6-6409-4d2f-b304-23a332c5a115"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Is Data Only For mapping -> Get Data for Mapping",
+              "targetStep": "/api/3/workflow_steps/b2d1b891-f271-4793-8673-33a1a8e7e6e6",
+              "sourceStep": "/api/3/workflow_steps/8ecd424f-dc48-4d3b-b1a6-e56c0e24bf50",
+              "label": "Yes, For Mapping",
+              "isExecuted": false,
+              "group": null,
+              "uuid": "824e05f7-78be-4dde-88d5-bbadda79c99e"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Configuration",
+              "targetStep": "/api/3/workflow_steps/d8ec215f-7251-40a9-8b67-7113a2f81feb",
+              "sourceStep": "/api/3/workflow_steps/541e6bf4-4ed3-47cc-a63a-c40b05bd9c45",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "2f137fab-9999-4ff8-a4c6-be01be1c84a6"
+            }
+          ],
+          "groups": [],
+          "priority": null,
+          "uuid": "3eaffb6f-4edb-438a-b893-68792c9a50e5",
+          "id": 1036,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "create",
+            "dataingestion",
+            "fetch",
+            "horizonAi"
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "triggerLimit": null,
+          "name": "HorizonAI > Ingest",
+          "aliasName": null,
+          "tag": "#HorizonAI #dataIngestion #ingest",
+          "description": "Data Ingestion Playbook",
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "remoteExecutableFlag": false,
+          "parameters": [],
+          "synchronous": false,
+          "lastModifyDate": 1745843822,
+          "collection": "/api/3/workflow_collections/ab95a52c-16f5-4f17-b82a-337f174c50d7",
+          "versions": [],
+          "triggerStep": "/api/3/workflow_steps/f67ddc63-6a89-478e-ae46-6fba92b5f7fd",
+          "steps": [
+            {
+              "@type": "WorkflowStep",
+              "name": "Fetch and Create",
+              "description": null,
+              "arguments": {
+                "params": {
+                  "create_pb_id": "c06c6a44-2d72-457d-9415-5eb331d54b56"
+                },
+                "arguments": [],
+                "apply_async": false,
+                "step_variables": [],
+                "pass_input_record": true,
+                "workflowReference": "/api/3/workflows/3eaffb6f-4edb-438a-b893-68792c9a50e5"
+              },
+              "status": null,
+              "top": "165",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/74932bdc-b8b6-4d24-88c4-1a4dfbc524f3",
+              "group": null,
+              "uuid": "3991ddfe-03ea-4fda-88bb-4ac084d00e58"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Start",
+              "description": null,
+              "arguments": {
+                "step_variables": []
+              },
+              "status": null,
+              "top": "30",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62",
+              "group": null,
+              "uuid": "f67ddc63-6a89-478e-ae46-6fba92b5f7fd"
+            },
+            {
+              "@type": "WorkflowStep",
+              "name": "Update Last Pull Time",
+              "description": null,
+              "arguments": {
+                "params": {
+                  "macro": "{{vars.steps.Fetch_and_Create.macro_name}}",
+                  "value": "{{vars.steps.Fetch_and_Create.updated_last_pull_time}}"
+                },
+                "version": "3.2.3",
+                "connector": "cyops_utilities",
+                "operation": "updatemacro",
+                "operationTitle": "FSR: Update Global Variables",
+                "step_variables": []
+              },
+              "status": null,
+              "top": "300",
+              "left": "125",
+              "stepType": "/api/3/workflow_step_types/0109f35d-090b-4a2b-bd8a-94cbc3508562",
+              "group": null,
+              "uuid": "1cf11dc9-2193-45a5-802a-5660901447eb"
+            }
+          ],
+          "routes": [
+            {
+              "@type": "WorkflowRoute",
+              "name": "Fetch nd Create -> Update Last Pull Time",
+              "targetStep": "/api/3/workflow_steps/1cf11dc9-2193-45a5-802a-5660901447eb",
+              "sourceStep": "/api/3/workflow_steps/3991ddfe-03ea-4fda-88bb-4ac084d00e58",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "68c5353f-cdbb-4e32-abca-a25b2d500c7e"
+            },
+            {
+              "@type": "WorkflowRoute",
+              "name": "Start -> Fetch and Create",
+              "targetStep": "/api/3/workflow_steps/3991ddfe-03ea-4fda-88bb-4ac084d00e58",
+              "sourceStep": "/api/3/workflow_steps/f67ddc63-6a89-478e-ae46-6fba92b5f7fd",
+              "label": null,
+              "isExecuted": false,
+              "group": null,
+              "uuid": "f53741df-7129-4819-a82e-7bb2d227cd42"
+            }
+          ],
+          "groups": [],
+          "priority": null,
+          "uuid": "6d2f65bf-3bb7-4cd4-9c04-5f456f2db026",
+          "id": 1035,
+          "owners": [],
+          "isPrivate": false,
+          "deletedAt": null,
+          "importedBy": [],
+          "recordTags": [
+            "dataingestion",
+            "horizonAi",
+            "ingest"
+          ]
+        },
+         {
+          "@type": "Workflow",
+          "uuid": "4efd06a7-1a3c-4acd-afae-d9f5717d7b4d",
+          "collection": "/api/3/workflow_collections/13b57e53-de5a-4afc-918d-d27aa2d10a6a",
+          "steps": [
+            {
+              "uuid": "703c1861-c4f4-40b9-8eca-9bbe5aaf0a9b",
               "@type": "WorkflowStep",
               "name": "Start",
               "description": null,
               "status": null,
               "arguments": {
-                "route": "5a2c4694-a5b3-48d8-a4d8-77961463feba",
-                "title": "HorizonAi: Get Pentests",
-                "resources": [
-                  "alerts"
-                ],
-                "inputVariables": [],
                 "step_variables": {
                   "input": {
-                    "records": "{{vars.input.records[0]}}"
+                    "params": []
                   }
-                },
-                "singleRecordExecution": false,
-                "noRecordExecution": true,
-                "executeButtonText": "Execute"
+                }
               },
               "left": "20",
               "top": "20",
-              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a"
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62"
             },
             {
-              "uuid": "0ad59657-e31d-4562-a96d-cff2a41b5fe8",
+              "uuid": "9e441c47-292f-4939-92a2-ef3e31a6ed99",
               "@type": "WorkflowStep",
               "name": "Get Pentests",
               "description": null,
               "status": null,
               "arguments": {
-                "name": "HorizonAi",
-                "config": "''",
-                "params": [],
+                "name": "Horizon3.ai",
+                "config": "",
+                "params": {
+                  "text_search": "",
+                  "order_by": "",
+                  "sort_order": "",
+                  "date_field": "",
+                  "date_from": "",
+                  "date_to": "",
+                  "state": "",
+                  "client_name": "",
+                  "include_attack_paths": "",
+                  "include_weaknesses": "",
+                  "page_num": 1,
+                  "page_size": 50
+                },
                 "version": "1.0.0",
                 "connector": "horizonAi",
                 "operation": "get_pentests",
-                "operationTitle": "Get Pentests",
-                "step_variables": {
-                  "output_data": "{{vars.result}}"
-                }
+                "operationTitle": "Get Pentests"
               },
               "left": "188",
               "top": "120",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671"
             }
           ],
-          "routes": [
-            {
-              "@type": "WorkflowRoute",
-              "uuid": "8f1110b4-530e-4d23-b058-8438d520bfdf",
-              "label": null,
-              "isExecuted": false,
-              "name": "Start-> Get Pentests",
-              "sourceStep": "/api/3/workflow_steps/5b11750b-91e6-46da-9be9-c051a95da581",
-              "targetStep": "/api/3/workflow_steps/0ad59657-e31d-4562-a96d-cff2a41b5fe8"
-            }
-          ]
-        },
-        {
-          "@type": "Workflow",
-          "uuid": "d5c9b33c-cb9c-485e-b4b1-306985137ad5",
-          "collection": "/api/3/workflow_collections/ab95a52c-16f5-4f17-b82a-337f174c50d7",
           "triggerLimit": null,
-          "description": "Retrieve attack paths for a specific pentest",
-          "name": "Get Attack Paths",
-          "tag": "#HorizonAi",
+          "description": "Retrieves pentests based on the filters provided.",
+          "name": "Get Pentests",
+          "tag": "#Horizon3.ai",
           "recordTags": [
             "horizonAi"
           ],
@@ -107,77 +755,69 @@
           "singleRecordExecution": false,
           "parameters": [],
           "synchronous": false,
-          "triggerStep": "/api/3/workflow_steps/10eea9bd-28e0-4dea-91d5-2aa2d009bfe2",
+          "triggerStep": "/api/3/workflow_steps/703c1861-c4f4-40b9-8eca-9bbe5aaf0a9b",
+          "routes": [
+            {
+              "uuid": "5208a67f-d256-49f5-95bb-eb79a9d77e59",
+              "@type": "WorkflowRoute",
+              "label": null,
+              "isExecuted": false,
+              "name": "Start-> Get Pentests",
+              "sourceStep": "/api/3/workflow_steps/703c1861-c4f4-40b9-8eca-9bbe5aaf0a9b",
+              "targetStep": "/api/3/workflow_steps/9e441c47-292f-4939-92a2-ef3e31a6ed99"
+            }
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "uuid": "2b7477f4-70cf-4efd-83c8-2801e5960f39",
+          "collection": "/api/3/workflow_collections/13b57e53-de5a-4afc-918d-d27aa2d10a6a",
           "steps": [
             {
-              "uuid": "10eea9bd-28e0-4dea-91d5-2aa2d009bfe2",
+              "uuid": "84b92d7a-d3ff-44b7-b9eb-4cbcb3f95cda",
               "@type": "WorkflowStep",
               "name": "Start",
               "description": null,
               "status": null,
               "arguments": {
-                "route": "0edd3a80-3c02-4aae-b284-d7babcaa2786",
-                "title": "HorizonAi: Get Attack Paths",
-                "resources": [
-                  "alerts"
-                ],
-                "inputVariables": [],
                 "step_variables": {
                   "input": {
-                    "records": "{{vars.input.records[0]}}"
+                    "params": []
                   }
-                },
-                "singleRecordExecution": false,
-                "noRecordExecution": true,
-                "executeButtonText": "Execute"
+                }
               },
               "left": "20",
               "top": "20",
-              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a"
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62"
             },
             {
-              "uuid": "f863727c-ce36-4e9d-8b45-855fb0d0a7d4",
+              "uuid": "591a2cea-ef86-4456-98aa-c43b0e31e59d",
               "@type": "WorkflowStep",
               "name": "Get Attack Paths",
               "description": null,
               "status": null,
               "arguments": {
-                "name": "HorizonAi",
-                "config": "''",
-                "params": [],
+                "name": "Horizon3.ai",
+                "config": "",
+                "params": {
+                  "op_id": "",
+                  "page_num": "",
+                  "page_size": ""
+                },
                 "version": "1.0.0",
                 "connector": "horizonAi",
                 "operation": "get_attack_paths",
-                "operationTitle": "Get Attack Paths",
-                "step_variables": {
-                  "output_data": "{{vars.result}}"
-                }
+                "operationTitle": "Get Attack Paths"
               },
               "left": "188",
               "top": "120",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671"
             }
           ],
-          "routes": [
-            {
-              "@type": "WorkflowRoute",
-              "uuid": "e1c0ce41-4620-4e2c-a7bd-b873db811bb8",
-              "label": null,
-              "isExecuted": false,
-              "name": "Start-> Get Attack Paths",
-              "sourceStep": "/api/3/workflow_steps/10eea9bd-28e0-4dea-91d5-2aa2d009bfe2",
-              "targetStep": "/api/3/workflow_steps/f863727c-ce36-4e9d-8b45-855fb0d0a7d4"
-            }
-          ]
-        },
-        {
-          "@type": "Workflow",
-          "uuid": "c4dd5ca2-937f-4a21-a224-27cb0291a720",
-          "collection": "/api/3/workflow_collections/ab95a52c-16f5-4f17-b82a-337f174c50d7",
           "triggerLimit": null,
-          "description": "Retrieve weaknesses for a specific pentest",
-          "name": "Get Weaknesses",
-          "tag": "#HorizonAi",
+          "description": "Retrieve attack paths for a specific pentest.",
+          "name": "Get Attack Paths",
+          "tag": "#Horizon3.ai",
           "recordTags": [
             "horizonAi"
           ],
@@ -186,70 +826,98 @@
           "singleRecordExecution": false,
           "parameters": [],
           "synchronous": false,
-          "triggerStep": "/api/3/workflow_steps/ea0887aa-7a51-4706-8c99-5e476946c122",
+          "triggerStep": "/api/3/workflow_steps/84b92d7a-d3ff-44b7-b9eb-4cbcb3f95cda",
+          "routes": [
+            {
+              "uuid": "14ccfaff-10da-4cc2-a071-5862a7fb3296",
+              "@type": "WorkflowRoute",
+              "label": null,
+              "isExecuted": false,
+              "name": "Start-> Get Attack Paths",
+              "sourceStep": "/api/3/workflow_steps/84b92d7a-d3ff-44b7-b9eb-4cbcb3f95cda",
+              "targetStep": "/api/3/workflow_steps/591a2cea-ef86-4456-98aa-c43b0e31e59d"
+            }
+          ]
+        },
+        {
+          "@type": "Workflow",
+          "uuid": "45b63ae5-2f53-44b1-b2aa-e7c88059582c",
+          "collection": "/api/3/workflow_collections/13b57e53-de5a-4afc-918d-d27aa2d10a6a",
           "steps": [
             {
-              "uuid": "ea0887aa-7a51-4706-8c99-5e476946c122",
+              "uuid": "7daa16b4-9e2b-4a20-a9b1-a0a6a3501e24",
               "@type": "WorkflowStep",
               "name": "Start",
               "description": null,
               "status": null,
               "arguments": {
-                "route": "52426063-d05f-468d-99f2-98abd516ae4b",
-                "title": "HorizonAi: Get Weaknesses",
-                "resources": [
-                  "alerts"
-                ],
-                "inputVariables": [],
                 "step_variables": {
                   "input": {
-                    "records": "{{vars.input.records[0]}}"
+                    "params": []
                   }
-                },
-                "singleRecordExecution": false,
-                "noRecordExecution": true,
-                "executeButtonText": "Execute"
+                }
               },
               "left": "20",
               "top": "20",
-              "stepType": "/api/3/workflow_step_types/f414d039-bb0d-4e59-9c39-a8f1e880b18a"
+              "stepType": "/api/3/workflow_step_types/b348f017-9a94-471f-87f8-ce88b6a7ad62"
             },
             {
-              "uuid": "03bd2985-ef58-465f-8e98-58ad2da27776",
+              "uuid": "270cae2a-a683-4b5c-a3c6-7110a9a856b5",
               "@type": "WorkflowStep",
               "name": "Get Weaknesses",
               "description": null,
               "status": null,
               "arguments": {
-                "name": "HorizonAi",
-                "config": "''",
-                "params": [],
+                "name": "Horizon3.ai",
+                "config": "",
+                "params": {
+                  "op_id": "",
+                  "page_num": 1,
+                  "page_size": 50
+                },
                 "version": "1.0.0",
                 "connector": "horizonAi",
                 "operation": "get_weaknesses",
-                "operationTitle": "Get Weaknesses",
-                "step_variables": {
-                  "output_data": "{{vars.result}}"
-                }
+                "operationTitle": "Get Weaknesses"
               },
               "left": "188",
               "top": "120",
               "stepType": "/api/3/workflow_step_types/0bfed618-0316-11e7-93ae-92361f002671"
             }
           ],
+          "triggerLimit": null,
+          "description": "Retrieve weaknesses for a specific pentest.",
+          "name": "Get Weaknesses",
+          "tag": "#Horizon3.ai",
+          "recordTags": [
+            "horizonAi"
+          ],
+          "isActive": false,
+          "debug": false,
+          "singleRecordExecution": false,
+          "parameters": [],
+          "synchronous": false,
+          "triggerStep": "/api/3/workflow_steps/7daa16b4-9e2b-4a20-a9b1-a0a6a3501e24",
           "routes": [
             {
+              "uuid": "f66e867e-2cbf-4b81-8ad7-f6d9022b68b6",
               "@type": "WorkflowRoute",
-              "uuid": "f393722c-cb01-4f13-9d04-3c1e47a29174",
               "label": null,
               "isExecuted": false,
               "name": "Start-> Get Weaknesses",
-              "sourceStep": "/api/3/workflow_steps/ea0887aa-7a51-4706-8c99-5e476946c122",
-              "targetStep": "/api/3/workflow_steps/03bd2985-ef58-465f-8e98-58ad2da27776"
+              "sourceStep": "/api/3/workflow_steps/7daa16b4-9e2b-4a20-a9b1-a0a6a3501e24",
+              "targetStep": "/api/3/workflow_steps/270cae2a-a683-4b5c-a3c6-7110a9a856b5"
             }
           ]
         }
       ]
     }
+  ],
+  "exported_tags": [
+    "horizonAi",
+    "create",
+    "dataingestion",
+    "fetch",
+    "ingest"
   ]
 }

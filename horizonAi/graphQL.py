@@ -1,3 +1,10 @@
+"""
+Copyright start
+MIT License
+Copyright (c) 2025 Fortinet Inc
+Copyright end
+"""
+
 # GraphQL query constants for Horizon API
 
 # Base pentest fields that are always included
