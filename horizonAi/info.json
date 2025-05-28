@@ -3,13 +3,18 @@
   "label": "Horizon3.ai",
   "version": "1.0.0",
   "description": "Horizon3.ai is a cybersecurity company specializing in automated security solutions. Their flagship product, NodeZero, is an autonomous penetration testing platform that simulates real-world cyberattacks to identify vulnerabilities and provide actionable remediation insights. Designed for ease of use, NodeZero empowers organizations to continuously assess and improve their security posture without relying heavily on manual intervention. It supports cloud, on-premise, and hybrid environments, making it adaptable to diverse IT setups.",
-  "publisher": "Community",
+  "publisher": "Fortinet SE",
+  "contributor": "Dylan Spille",
   "cs_approved": false,
   "cs_compatible": true,
   "category": "Attack surface management",
-  "icon_small_name": "",
-  "icon_large_name": "horizon_large.png",
-  "help_online": "",
+  "icon_small_name": "small.png",
+  "icon_large_name": "large.png",
+  "ingestion_supported": true,
+  "ingestion_modes": [
+    "scheduled"
+  ],
+  "help_online": "https://github.com/fortinet-fortisoar/connector-horizon3-ai/blob/release/1.0.0/docs/HorizonAIConnectorDoc.md",
   "configuration": {
     "fields": [
       {
@@ -21,7 +26,7 @@
         "required": true,
         "placeholder": "https://api.horizon3ai.com/",
         "value": "https://api.horizon3ai.com/",
-        "description": "Horizon.ai GraphQL API endpoint"
+        "description": "Specify Horizon.ai GraphQL API endpoint to connect and perform automated operations."
       },
       {
         "title": "API Token",
@@ -30,7 +35,7 @@
         "required": true,
         "visible": true,
         "editable": true,
-        "description": "Bearer token for API authentication"
+        "description": "Specify the bearer token for API authentication."
       },
       {
         "title": "Verify SSL",
@@ -40,7 +45,7 @@
         "visible": true,
         "editable": true,
         "value": true,
-        "description": "Verify SSL certificate"
+        "description": "Specifies whether the SSL certificate for the server is to be verified or not. By default, this option is set as True."
       }
     ]
   },
@@ -48,30 +53,10 @@
     {
       "operation": "get_pentests",
       "title": "Get Pentests",
-      "description": "Retrieve and filter pentest operations",
+      "description": "Retrieves pentests based on the filters provided.",
       "category": "investigation",
       "annotation": "get_pentests",
       "parameters": [
-        {
-          "title": "Page Number",
-          "type": "integer",
-          "name": "page_num",
-          "required": false,
-          "visible": true,
-          "editable": true,
-          "description": "Page number for pagination",
-          "value": 1
-        },
-        {
-          "title": "Page Size",
-          "type": "integer",
-          "name": "page_size",
-          "required": false,
-          "visible": true,
-          "editable": true,
-          "value": 50,
-          "description": "Number of results per page"
-        },
         {
           "title": "Text Search",
           "type": "text",
@@ -79,8 +64,8 @@
           "required": false,
           "visible": true,
           "editable": true,
-          "description": "Search across all text columns",
-          "tooltip": "Search across all text columns"
+          "description": "Specify text to search across all text columns.",
+          "tooltip": "Specify text to search across all text columns."
         },
         {
           "title": "Sort By",
@@ -98,8 +83,8 @@
             "Impact Count",
             "Attack Path Count"
           ],
-          "description": "Field to sort results by",
-          "tooltip": "Choose which field to sort the results by"
+          "description": "Specify the field to sort the results.",
+          "tooltip": "Specify the field to sort the results."
         },
         {
           "title": "Sort Direction",
@@ -112,8 +97,8 @@
             "Ascending",
             "Descending"
           ],
-          "description": "Direction to sort results",
-          "tooltip": "Sort results in ascending or descending order"
+          "description": "Specify the direction to sort results.",
+          "tooltip": "Specify the direction to sort results."
         },
         {
           "title": "Date Filter Field",
@@ -128,8 +113,8 @@
             "Schedule Date",
             "Cancellation Date"
           ],
-          "description": "Which date field to filter by",
-          "tooltip": "Select which date field to apply the date range filters to"
+          "description": "Select the date field to which the date range filters should be applied.",
+          "tooltip": "Select the date field to which the date range filters should be applied."
         },
         {
           "title": "Date From",
@@ -138,7 +123,7 @@
           "required": false,
           "visible": true,
           "editable": true,
-          "description": "Filter results from this date",
+          "description": "Filters results from this date",
           "tooltip": "Filter results from this date"
         },
         {
@@ -171,8 +156,8 @@
             "Paused",
             "Error"
           ],
-          "description": "Filter by operation status",
-          "tooltip": "Show only operations in the selected status"
+          "description": "Filters the result by operation status.",
+          "tooltip": "Filters the result by operation status."
         },
         {
           "title": "Client Name",
@@ -181,8 +166,8 @@
           "required": false,
           "visible": true,
           "editable": true,
-          "description": "Filter by client name",
-          "tooltip": "Filter by client name"
+          "description": "Specify the client name to filter the results.",
+          "tooltip": "Specify the client name to filter the results."
         },
         {
           "title": "Include Attack Paths",
@@ -191,8 +176,8 @@
           "required": false,
           "visible": true,
           "editable": true,
-          "description": "Include attack paths in the response",
-          "tooltip": "Include attack paths in the response"
+          "description": "Specify whether to include attack paths in the response.",
+          "tooltip": "Specify whether to include attack paths in the response."
         },
         {
           "title": "Include Weaknesses",
@@ -201,18 +186,38 @@
           "required": false,
           "visible": true,
           "editable": true,
-          "description": "Include weaknesses in the response",
-          "tooltip": "Include weaknesses in the response"
+          "description": "Specify whether to weaknesses in the response.",
+          "tooltip": "Specify whether to weaknesses in the response."
+        },
+        {
+          "title": "Page Number",
+          "type": "integer",
+          "name": "page_num",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "description": "Specify the page number to retrieve specific page data.",
+          "value": 1
+        },
+        {
+          "title": "Page Size",
+          "type": "integer",
+          "name": "page_size",
+          "required": false,
+          "visible": true,
+          "editable": true,
+          "value": 50,
+          "description": "Specify the number of records or items to be retrieved per page."
         }
       ],
       "output_schema": {
         "pentests_page": {
           "pentests": [],
           "page_info": {
-            "page_size": 0,
+            "page_size": "",
             "end_cursor": "",
-            "has_next_page": false,
-            "total_count": 0
+            "has_next_page": "",
+            "total_count": ""
           }
         }
       }
@@ -220,7 +225,7 @@
     {
       "operation": "get_attack_paths",
       "title": "Get Attack Paths",
-      "description": "Retrieve attack paths for a specific pentest",
+      "description": "Retrieve attack paths for a specific pentest.",
       "category": "investigation",
       "annotation": "get_attack_paths",
       "parameters": [
@@ -231,7 +236,7 @@
           "required": true,
           "visible": true,
           "editable": true,
-          "description": "Pentest operation ID"
+          "description": "Specify pentest operation ID"
         },
         {
           "title": "Page Number",
@@ -240,7 +245,7 @@
           "required": false,
           "visible": true,
           "editable": true,
-          "description": "Page number for pagination"
+          "description": "Specify the page number to retrieve specific page data."
         },
         {
           "title": "Page Size",
@@ -249,7 +254,7 @@
           "required": false,
           "visible": true,
           "editable": true,
-          "description": "Number of results per page"
+          "description": "Specify the number of records or items to be retrieved per page"
         }
       ],
       "output_schema": {
@@ -258,7 +263,7 @@
           "page_info": {
             "page_size": 0,
             "end_cursor": "",
-            "has_next_page": false,
+            "has_next_page": "",
             "total_count": 0
           }
         }
@@ -267,7 +272,7 @@
     {
       "operation": "get_weaknesses",
       "title": "Get Weaknesses",
-      "description": "Retrieve weaknesses for a specific pentest",
+      "description": "Retrieve weaknesses for a specific pentest.",
       "category": "investigation",
       "annotation": "get_weaknesses",
       "parameters": [
@@ -278,7 +283,7 @@
           "editable": true,
           "visible": true,
           "required": true,
-          "description": "Pentest operation ID"
+          "description": "Specify the pentest operation ID"
         },
         {
           "name": "page_num",
@@ -288,7 +293,7 @@
           "visible": true,
           "required": false,
           "value": 1,
-          "description": "Page number for pagination"
+          "description": "Specify the page number to retrieve specific page data."
         },
         {
           "name": "page_size",
@@ -298,17 +303,17 @@
           "visible": true,
           "required": false,
           "value": 50,
-          "description": "Number of results per page"
+          "description": "Specify the number of records or items to be retrieved per page."
         }
       ],
       "output_schema": {
         "weaknesses_page": {
           "weaknesses": [],
           "page_info": {
-            "page_size": 0,
+            "page_size": "",
             "end_cursor": "",
-            "has_next_page": false,
-            "total_count": 0
+            "has_next_page": "",
+            "total_count": ""
           }
         }
       }

@@ -1,3 +1,10 @@
+"""
+Copyright start
+MIT License
+Copyright (c) 2025 Fortinet Inc
+Copyright end
+"""
+
 import requests
 from connectors.core.connector import get_logger, ConnectorError
 
