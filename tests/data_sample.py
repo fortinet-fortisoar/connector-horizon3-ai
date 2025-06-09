@@ -1,4 +1,10 @@
-"""Rename file to data.py"""
+"""
+Copyright start
+MIT License
+Copyright (c) 2025 Fortinet Inc
+Copyright end
+"""
+
 config = {
     "verify_ssl": True,
     "api_token": "add api token here",
