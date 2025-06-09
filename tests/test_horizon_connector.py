@@ -1,3 +1,10 @@
+"""
+Copyright start
+MIT License
+Copyright (c) 2025 Fortinet Inc
+Copyright end
+"""
+
 import pytest
 from connectors.core.connector import ConnectorError
 from horizonAi.operations import operations
