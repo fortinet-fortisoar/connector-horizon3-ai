@@ -17,6 +17,6 @@ invalid_config = {
 }
 
 connector_info = {
-    "connector_name": "horizon-ai",
+    "connector_name": "horizon3-ai",
     "connector_version": "1.0.0"
 }
