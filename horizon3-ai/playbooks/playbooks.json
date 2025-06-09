@@ -14,13 +14,13 @@
       "deletedAt": null,
       "importedBy": [],
       "recordTags": [
-        "horizonAi"
+        "horizon3-ai"
       ],
       "workflows": [
         {
           "@type": "Workflow",
           "triggerLimit": null,
-          "name": ">> HorizonAI >> Create Vulnerability",
+          "name": ">> Horizon3AI >> Create Vulnerability",
           "aliasName": null,
           "tag": null,
           "description": "This Playbook creates vulnerabilities in FortiSOAR.",
@@ -86,7 +86,7 @@
                   "page_size": ""
                 },
                 "version": "1.0.0",
-                "connector": "horizonAi",
+                "connector": "horizon3-ai",
                 "operation": "get_weaknesses",
                 "operationTitle": "Get Weaknesses",
                 "pickFromTenant": false,
@@ -151,15 +151,15 @@
           "recordTags": [
             "create",
             "dataingestion",
-            "horizonAi"
+            "horizon3-ai"
           ]
         },
         {
           "@type": "Workflow",
           "triggerLimit": null,
-          "name": "> HorizonAI > Fetch and Create",
+          "name": "> Horizon3AI > Fetch and Create",
           "aliasName": null,
-          "tag": "#HorizonAI #dataingestion #fetch #create",
+          "tag": "#Horizon3AI #dataingestion #fetch #create",
           "description": "This playbook fetches and creates pentests from Horizon3.ai",
           "isActive": false,
           "debug": false,
@@ -301,7 +301,7 @@
                   "include_attack_paths": false
                 },
                 "version": "1.0.0",
-                "connector": "horizonAi",
+                "connector": "horizon3-ai",
                 "operation": "get_pentests",
                 "operationTitle": "Get Pentests",
                 "pickFromTenant": false,
@@ -356,7 +356,7 @@
                   "include_attack_paths": true
                 },
                 "version": "1.0.0",
-                "connector": "horizonAi",
+                "connector": "horizon3-ai",
                 "operation": "get_pentests",
                 "operationTitle": "Get Pentests",
                 "pickFromTenant": false,
@@ -573,15 +573,15 @@
             "create",
             "dataingestion",
             "fetch",
-            "horizonAi"
+            "horizon3-ai"
           ]
         },
         {
           "@type": "Workflow",
           "triggerLimit": null,
-          "name": "HorizonAI > Ingest",
+          "name": "Horizon3AI > Ingest",
           "aliasName": null,
-          "tag": "#HorizonAI #dataIngestion #ingest",
+          "tag": "#Horizon3AI #dataIngestion #ingest",
           "description": "Data Ingestion Playbook",
           "isActive": false,
           "debug": false,
@@ -684,7 +684,7 @@
           "importedBy": [],
           "recordTags": [
             "dataingestion",
-            "horizonAi",
+            "horizon3-ai",
             "ingest"
           ]
         },
@@ -734,7 +734,7 @@
                   "page_size": 50
                 },
                 "version": "1.0.0",
-                "connector": "horizonAi",
+                "connector": "horizon3-ai",
                 "operation": "get_pentests",
                 "operationTitle": "Get Pentests"
               },
@@ -748,7 +748,7 @@
           "name": "Get Pentests",
           "tag": "#Horizon3.ai",
           "recordTags": [
-            "horizonAi"
+            "horizon3-ai"
           ],
           "isActive": false,
           "debug": false,
@@ -805,7 +805,7 @@
                   "page_size": ""
                 },
                 "version": "1.0.0",
-                "connector": "horizonAi",
+                "connector": "horizon3-ai",
                 "operation": "get_attack_paths",
                 "operationTitle": "Get Attack Paths"
               },
@@ -819,7 +819,7 @@
           "name": "Get Attack Paths",
           "tag": "#Horizon3.ai",
           "recordTags": [
-            "horizonAi"
+            "horizon3-ai"
           ],
           "isActive": false,
           "debug": false,
@@ -876,7 +876,7 @@
                   "page_size": 50
                 },
                 "version": "1.0.0",
-                "connector": "horizonAi",
+                "connector": "horizon3-ai",
                 "operation": "get_weaknesses",
                 "operationTitle": "Get Weaknesses"
               },
@@ -890,7 +890,7 @@
           "name": "Get Weaknesses",
           "tag": "#Horizon3.ai",
           "recordTags": [
-            "horizonAi"
+            "horizon3-ai"
           ],
           "isActive": false,
           "debug": false,
@@ -914,7 +914,7 @@
     }
   ],
   "exported_tags": [
-    "horizonAi",
+    "horizon3-ai",
     "create",
     "dataingestion",
     "fetch",
